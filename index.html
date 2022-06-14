@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>3D Concept Grounding on Neural Fields</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="web/offcanvas.css" rel="stylesheet">
+    <!--    <link rel="icon" href="img/favicon.gif" type="image/gif">-->
+
+<script>
+function initComparisons() {
+  var x, i;
+  /*find all elements with an "overlay" class:*/
+  x = document.getElementsByClassName("img-comp-overlay");
+  for (i = 0; i < x.length; i++) {
+    /*once for each "overlay" element:
+    pass the "overlay" element as a parameter when executing the compareImages function:*/
+    compareImages(x[i]);
+  }
+  function compareImages(img) {
+    var slider, img, clicked = 0, w, h;
+    /*get the width and height of the img element*/
+    w = img.offsetWidth;
+    h = img.offsetHeight;
+    /*set the width of the img element to 50%:*/
+    img.style.width = (w / 2) + "px";
+    /*create slider:*/
+    slider = document.createElement("DIV");
+    slider.setAttribute("class", "img-comp-slider");
+    /*insert slider*/
+    img.parentElement.insertBefore(slider, img);
+    /*position the slider in the middle:*/
+    slider.style.top = (h / 2) - (slider.offsetHeight / 2) + "px";
+    slider.style.left = (w / 2) - (slider.offsetWidth / 2) + "px";
+    /*execute a function when the mouse button is pressed:*/
+    slider.addEventListener("mousedown", slideReady);
+    /*and another function when the mouse button is released:*/
+    window.addEventListener("mouseup", slideFinish);
+    /*or touched (for touch screens:*/
+    slider.addEventListener("touchstart", slideReady);
+    /*and released (for touch screens:*/
+    window.addEventListener("touchend", slideFinish);
+    function slideReady(e) {
+      /*prevent any other actions that may occur when moving over the image:*/
+      e.preventDefault();
+      /*the slider is now clicked and ready to move:*/
+      clicked = 1;
+      /*execute a function when the slider is moved:*/
+      window.addEventListener("mousemove", slideMove);
+      window.addEventListener("touchmove", slideMove);
+    }
+    function slideFinish() {
+      /*the slider is no longer clicked:*/
+      clicked = 0;
+    }
+    function slideMove(e) {
+      var pos;
+      /*if the slider is no longer clicked, exit this function:*/
+      if (clicked == 0) return false;
+      /*get the cursor's x position:*/
+      pos = getCursorPos(e)
+      /*prevent the slider from being positioned outside the image:*/
+      if (pos < 0) pos = 0;
+      if (pos > w) pos = w;
+      /*execute a function that will resize the overlay image according to the cursor:*/
+      slide(pos);
+    }
+    function getCursorPos(e) {
+      var a, x = 0;
+      e = (e.changedTouches) ? e.changedTouches[0] : e;
+      /*get the x positions of the image:*/
+      a = img.getBoundingClientRect();
+      /*calculate the cursor's x coordinate, relative to the image:*/
+      x = e.pageX - a.left;
+      /*consider any page scrolling:*/
+      x = x - window.pageXOffset;
+      return x;
+    }
+    function slide(x) {
+      /*resize the image:*/
+      img.style.width = x + "px";
+      /*position the slider:*/
+      slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + "px";
+    }
+  }
+}
+</script>
+    
+</head>
+
+<body>
+  
+<div class="jumbotron jumbotron-fluid">
+    <div class="container"></div>
+    <h2>3D Concept Grounding on Neural Fields</h2>
+    <hr>
+    <p class="authors">
+        <a href="https://evelinehong.github.io/"> Yining Hong</a>,
+        <a href="https://yilundu.github.io/"> Yilun Du</a>,
+        <a href="https://xhrlyb.github.io/"> Chunru Lin</a>,
+        <a href="https://people.csail.mit.edu/ganchuang/"> Chuang Gan</a>
+    </p>
+    <div class="btn-group" role="group" aria-label="Top menu">
+        <a class="btn btn-primary" href="https://arxiv.org/">Paper</a>
+    </div>
+</div>
+
+
+<div class="container" style="margin-top:-40px;">
+  <br>
+    <div class="section">
+        <h3 align="center">Abstract</h3>
+        <hr>
+        <p>
+    In this paper, we address the challenging problem of 3D concept grounding (i.e. segmenting and learning visual concepts) by looking at RGBD images and reasoning about paired questions and answers. 
+    Existing visual reasoning approaches typically utilize supervised methods to extract 2D segmentation masks on which concepts are grounded. In contrast, humans are capable of grounding concepts on the underlying 3D representation of images. However, traditionally inferred 3D representations (e.g. point clouds, voxelgrids and meshes) cannot capture continuous 3D features flexibly, thus making it challenging to ground concepts to 3D regions based on the language description of the object being referred to. To address both issues, we propose to leverage the continuous, differentiable nature of neural fields to segment and learn concepts. Specifically, each 3D coordinate in a scene is represented as a high dimensional descriptor. Concept grounding can then be performed by computing the similarity between the descriptor vector of a 3D coordinate and the vector embedding of a language concept, which enables segmentations and concept learning to be jointly learned on neural fields in a differentiable fashion.  As a result, both 3D semantic and instance segmentations can emerge directly from question answering supervision using a set of defined neural operators on top of neural fields (e.g. filtering  and counting). Experimental results show that our proposed framework outperforms unsupervised / language-mediated segmentation models on semantic and instance segmentation tasks, as well as outperforms existing models on the challenging 3D aware visual reasoning tasks. Furthermore, our framework can generalize well to unseen shape categories and real scans. 
+        </p>  
+        <img src="web/img/teaser.png"
+            style="width:100%; margin-right:-20px; margin-top:20px;">
+        <br>
+        <br>
+        <img src="web/img/framework.png"
+                  style="width:100%; margin-right:-20px; margin-top:20p">
+    </div>
+
+
+    <div class="section">
+        <h2>Results</h2>
+        <hr>
+    </div>
+    
+    <div class="section">
+        <h3>Reasoning and Concept Grounding</h3>
+        <p>
+          Given an input image of a shape and a question, we first parse the question into steps of operators. We visualize the set of points being referred to by the operator via highlighting the regions where mask probabilities > 0.5. As is shown,our 3D-CG can make reference to the right set of coordinates, thus correctly answering the questions.
+        </p>
+	<div style="display: flex; padding: 0px">
+    <img src="web/img/reference.png"
+          style="width:100%; margin-right:-20px; margin-top:20px;">
+	</div>
+	<br>
+	<h3>Segmentation</h3>
+        <p>
+          CVX and BAE are unsupervised segmentaton methods. CVX+L and BAE+L are language-mediated methods which utilize question answering loss to finetune the segmentation module. 3D-CG has better performances in both semantic and instance segmentations, while other methods suffer from merging parts or segmenting a part into multiple parts.
+        </p>
+        <div style="display: flex; padding: 0px">
+          <img src="web/img/visualization.png"
+            style="width:100%; margin-right:-20px; margin-top:20px;">
+          </div>
+    </div>
+
+    <div class="section">
+        <h3>Generalization</h3>
+	<p>
+	  Our 3D-CG can also generalize well to unseen categories and real scans.
+        </p>
+        <div style="display: flex; padding: 0px">
+          <img src="web/img/generalization.png"
+            style="width:100%; margin-right:-20px; margin-top:20px;">
+          </div>
+	<br>
+
+
+    </div>
+    <div class="section">
+      <h3>Citation</h3>
+      <div class="form-group col-md-10">
+        <textarea id="bibtex" class="form-control" rows=6 readonly>
+@article{hong2022threedcg,
+  title={3D Concept Grounding on Neural Fields},
+  author={Yining Hong and Yilun Du and Chunru Lin and Chuang Gan},
+  journal={arXiv},
+  year={2022}
+}</textarea>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+
+</body>
+</html>
